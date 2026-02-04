@@ -1,91 +1,63 @@
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-const codeBox = document.getElementById("code");
-
-let items = [];
-
-/* Drag Start */
-document.querySelectorAll(".component").forEach(c=>{
-  c.addEventListener("dragstart",e=>{
-    e.dataTransfer.setData("type",c.dataset.type);
-  });
-});
-
-/* Allow Drop */
-canvas.addEventListener("dragover",e=>{
-  e.preventDefault();
-});
-
-/* Drop */
-canvas.addEventListener("drop",e=>{
-  const type = e.dataTransfer.getData("type");
-
-  items.push({
-    type:type,
-    x:e.offsetX,
-    y:e.offsetY
-  });
-
-  draw();
-  generateCode();
-});
-
-/* Draw */
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  items.forEach(i=>{
-    ctx.fillStyle="orange";
-    ctx.fillRect(i.x,i.y,60,40);
-    ctx.fillStyle="black";
-    ctx.fillText(i.type,i.x+5,i.y+25);
-  });
+body{
+  margin:0;
+  font-family:Arial;
 }
 
-/* Code */
-function generateCode(){
-  let code="";
-
-  if(items.some(i=>i.type==="led"))
-    code+="int led=13;\n";
-
-  if(items.some(i=>i.type==="button"))
-    code+="int btn=2;\n";
-
-  code+="\nvoid setup(){\n";
-  if(items.some(i=>i.type==="led"))
-    code+=" pinMode(led,OUTPUT);\n";
-  if(items.some(i=>i.type==="button"))
-    code+=" pinMode(btn,INPUT);\n";
-  code+="}\n\nvoid loop(){\n";
-
-  if(items.some(i=>i.type==="led") &&
-     items.some(i=>i.type==="button")){
-    code+=" if(digitalRead(btn)){\n";
-    code+="  digitalWrite(led,HIGH);\n";
-    code+=" } else {\n";
-    code+="  digitalWrite(led,LOW);\n";
-    code+=" }\n";
-  }
-
-  code+="}\n";
-
-  codeBox.textContent=code;
+#topbar{
+  background:#222;
+  padding:10px;
 }
 
-/* Toggle */
-document.getElementById("showCode").onclick=()=>{
-  codeBox.style.display="block";
-};
-document.getElementById("showCanvas").onclick=()=>{
-  codeBox.style.display="none";
-};
+#topbar button{
+  margin-right:10px;
+  padding:6px 12px;
+}
 
-/* Buttons */
-document.getElementById("start").onclick=()=>{
-  alert("Simulation Started");
-};
+#layout{
+  display:flex;
+  height:500px;
+}
 
-document.getElementById("stop").onclick=()=>{
-  alert("Simulation Stopped");
-};
+/* Palette */
+#palette{
+  width:180px;
+  background:#2c3e50;
+  color:white;
+  padding:10px;
+}
+
+.part{
+  width:120px;
+  margin-bottom:15px;
+  cursor:grab;
+}
+
+/* Workspace */
+#workspace{
+  flex:1;
+  position:relative;
+  background:#ddd;
+}
+
+#board{
+  width:100%;
+  height:100%;
+  position:relative;
+}
+
+.component{
+  position:absolute;
+  width:120px;
+}
+
+#codePanel{
+  display:none;
+  position:absolute;
+  right:0;
+  top:0;
+  width:40%;
+  height:100%;
+  background:black;
+  color:#00ff00;
+  padding:10px;
+}
