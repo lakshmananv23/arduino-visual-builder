@@ -6,56 +6,61 @@
 
 <style>
 body{
-  font-family:Arial;
   margin:0;
+  font-family:Arial;
 }
 
+/* Top Bar */
 #top{
   background:#222;
   padding:10px;
-  color:white;
 }
-
 #top button{
   margin-right:10px;
 }
 
+/* Layout */
 #main{
   display:flex;
   height:450px;
 }
 
+/* Palette */
 #palette{
   width:180px;
   background:#2c3e50;
+  padding:10px;
   color:white;
-  padding:10px;
 }
-
 .part{
-  background:#3498db;
-  margin:8px 0;
-  padding:10px;
+  width:120px;
+  margin-bottom:10px;
   cursor:grab;
-  text-align:center;
 }
 
+/* Workspace */
 #workspace{
   flex:1;
   background:#eee;
   position:relative;
+  overflow:hidden;
 }
 
+/* Placed Components */
 .component{
   position:absolute;
-  width:80px;
-  height:40px;
-  background:#f39c12;
-  text-align:center;
-  line-height:40px;
+  width:90px;
   cursor:pointer;
 }
 
+/* Wire Canvas */
+#wireCanvas{
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+/* Code Panel */
 #code{
   position:absolute;
   right:0;
@@ -80,46 +85,109 @@ body{
 
 <div id="main">
 
+  <!-- PALETTE -->
   <div id="palette">
-    <div class="part" draggable="true" data-type="Arduino">Arduino</div>
-    <div class="part" draggable="true" data-type="LED">LED</div>
-    <div class="part" draggable="true" data-type="Button">Button</div>
+
+    <img class="part" draggable="true" data-type="arduino"
+     src="https://i.imgur.com/qIufhof.png">
+
+    <img class="part" draggable="true" data-type="led"
+     src="https://i.imgur.com/Qbf8fIk.png">
+
+    <img class="part" draggable="true" data-type="button"
+     src="https://i.imgur.com/7z7Q6Vb.png">
+
   </div>
 
-  <div id="workspace" ondragover="event.preventDefault()" ondrop="dropPart(event)">
-    <div id="code"></div>
+  <!-- WORKSPACE -->
+  <div id="workspace"
+       ondragover="event.preventDefault()"
+       ondrop="dropPart(event)">
+
+    <canvas id="wireCanvas"></canvas>
+    <pre id="code"></pre>
+
   </div>
 
 </div>
 
 <script>
 
+const workspace = document.getElementById("workspace");
+const wireCanvas = document.getElementById("wireCanvas");
+const wctx = wireCanvas.getContext("2d");
+
+wireCanvas.width = workspace.clientWidth;
+wireCanvas.height = workspace.clientHeight;
+
 let parts=[];
+let selected=null;
+let ledOn=false;
 
+/* Drag Start */
+document.querySelectorAll(".part").forEach(p=>{
+  p.ondragstart = e=>{
+    e.dataTransfer.setData("type",p.dataset.type);
+    e.dataTransfer.setData("src",p.src);
+  }
+});
+
+/* Drop */
 function dropPart(e){
+
   let type = e.dataTransfer.getData("type");
+  let src  = e.dataTransfer.getData("src");
 
-  let d = document.createElement("div");
-  d.className="component";
-  d.innerText=type;
-  d.style.left=e.offsetX+"px";
-  d.style.top=e.offsetY+"px";
+  let img = document.createElement("img");
+  img.src = src;
+  img.className="component";
+  img.dataset.type=type;
+  img.style.left=e.offsetX+"px";
+  img.style.top=e.offsetY+"px";
 
-  document.getElementById("workspace").appendChild(d);
+  img.onclick=()=>selectPart(img);
+
+  workspace.appendChild(img);
   parts.push(type);
   generateCode();
 }
 
-document.querySelectorAll(".part").forEach(p=>{
-  p.ondragstart=e=>{
-    e.dataTransfer.setData("type",p.dataset.type);
-  };
-});
+/* Select For Wire */
+function selectPart(part){
 
+  if(selected==null){
+    selected=part;
+    part.style.outline="2px solid yellow";
+  } else {
+    drawWire(selected,part);
+    selected.style.outline="none";
+    selected=null;
+  }
+
+}
+
+/* Draw Wire */
+function drawWire(a,b){
+
+  let ax=a.offsetLeft+a.width/2;
+  let ay=a.offsetTop+a.height/2;
+  let bx=b.offsetLeft+b.width/2;
+  let by=b.offsetTop+b.height/2;
+
+  wctx.beginPath();
+  wctx.moveTo(ax,ay);
+  wctx.lineTo(bx,by);
+  wctx.strokeStyle="black";
+  wctx.lineWidth=2;
+  wctx.stroke();
+}
+
+/* Generate Code */
 function generateCode(){
-let code=
-`int led=13;
-int button=2;
+
+document.getElementById("code").textContent =
+`int led = 13;
+int button = 2;
 
 void setup(){
  pinMode(led,OUTPUT);
@@ -134,25 +202,31 @@ void loop(){
  }
 }
 `;
-document.getElementById("code").innerText=code;
 }
 
+/* Toggle Code */
 function toggleCode(){
  let c=document.getElementById("code");
- c.style.display=c.style.display=="block"?"none":"block";
+ c.style.display = c.style.display=="block"?"none":"block";
 }
 
+/* Run */
 function run(){
+ ledOn=!ledOn;
+
  document.querySelectorAll(".component").forEach(c=>{
-  if(c.innerText=="LED")
-    c.style.background="red";
+  if(c.dataset.type=="led"){
+    c.style.filter = ledOn ?
+    "drop-shadow(0 0 10px red)" : "none";
+  }
  });
 }
 
+/* Stop */
 function stop(){
+ ledOn=false;
  document.querySelectorAll(".component").forEach(c=>{
-  if(c.innerText=="LED")
-    c.style.background="#f39c12";
+  c.style.filter="none";
  });
 }
 
