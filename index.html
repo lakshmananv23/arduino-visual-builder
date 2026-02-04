@@ -1,35 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Arduino Builder</title>
+<meta charset="UTF-8">
+<title>Arduino Visual Simulator</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div id="toolbar">
-  <button id="showCode">Code View</button>
-  <button id="showCanvas">Component View</button>
+<div id="topbar">
+  <button id="runBtn">▶ Run</button>
+  <button id="stopBtn">■ Stop</button>
+  <button id="codeViewBtn">Code View</button>
 </div>
 
-<div id="container">
+<div id="layout">
 
+  <!-- Components -->
   <div id="palette">
-    <div class="component" draggable="true" data-type="arduino">Arduino</div>
-    <div class="component" draggable="true" data-type="led">LED</div>
-    <div class="component" draggable="true" data-type="button">Button</div>
+    <h3>Components</h3>
+
+    <img src="https://i.imgur.com/qIufhof.png"
+         draggable="true"
+         class="part"
+         data-type="arduino">
+
+    <img src="https://i.imgur.com/Qbf8fIk.png"
+         draggable="true"
+         class="part"
+         data-type="led">
+
+    <img src="https://i.imgur.com/7z7Q6Vb.png"
+         draggable="true"
+         class="part"
+         data-type="button">
   </div>
 
-  <div id="workarea">
-    <canvas id="canvas" width="800" height="400"></canvas>
-    <pre id="code"></pre>
+  <!-- Workspace -->
+  <div id="workspace">
+    <div id="board"></div>
+    <pre id="codePanel"></pre>
   </div>
 
-</div>
-
-<div id="bottom">
-  <button id="start">Start</button>
-  <button id="stop">Stop</button>
 </div>
 
 <script src="script.js"></script>
