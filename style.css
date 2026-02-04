@@ -1,75 +1,63 @@
-body {
-  margin: 0;
-  font-family: Arial;
-  height: 100vh;
-  display: grid;
-  grid-template-rows: 50px 1fr 60px;
+body{
+  margin:0;
+  font-family:Arial;
 }
 
-/* Toolbar */
-#toolbar {
-  background: #333;
-  padding: 10px;
+#toolbar{
+  background:#333;
+  padding:10px;
 }
 
-#toolbar button {
-  margin-right: 10px;
-  padding: 6px 12px;
+#toolbar button{
+  margin-right:10px;
 }
 
-/* Main Area */
-#main {
-  display: grid;
-  grid-template-columns: 200px 1fr;
+#container{
+  display:flex;
+  height:400px;
 }
 
-/* Palette */
-#palette {
-  background: #2c3e50;
-  color: white;
-  padding: 10px;
+#palette{
+  width:150px;
+  background:#2c3e50;
+  color:white;
+  padding:10px;
 }
 
-.component {
-  background: #3498db;
-  padding: 8px;
-  margin: 5px 0;
-  cursor: grab;
+.component{
+  background:#3498db;
+  margin:5px 0;
+  padding:8px;
+  cursor:grab;
 }
 
-/* Workspace */
-#workspaceContainer {
-  position: relative;
-  background: #ddd;
+#workarea{
+  position:relative;
+  flex:1;
 }
 
-#canvas {
-  background: white;
-  border: 1px solid black;
+#canvas{
+  border:1px solid black;
 }
 
-/* Code View */
-#codePanel {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 40%;
-  height: 100%;
-  background: black;
-  color: #00ff00;
-  padding: 10px;
-  display: none;
-  overflow: auto;
+#code{
+  display:none;
+  position:absolute;
+  top:0;
+  right:0;
+  width:40%;
+  height:100%;
+  background:black;
+  color:lime;
+  padding:10px;
 }
 
-/* Controls */
-#controls {
-  background: #333;
-  text-align: center;
-  padding: 10px;
+#bottom{
+  background:#333;
+  padding:10px;
+  text-align:center;
 }
 
-#controls button {
-  padding: 10px 20px;
-  margin: 0 10px;
+#bottom button{
+  padding:10px 20px;
 }
