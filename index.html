@@ -1,41 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Arduino Visual Builder</title>
-  <link rel="stylesheet" href="style.css">
+<title>Arduino Builder</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<!-- ===== Toolbar ===== -->
 <div id="toolbar">
-  <button id="componentBtn">Component View</button>
-  <button id="codeBtn">Code View</button>
+  <button id="showCode">Code View</button>
+  <button id="showCanvas">Component View</button>
 </div>
 
-<!-- ===== Main Layout ===== -->
-<div id="main">
+<div id="container">
 
-  <!-- Palette -->
   <div id="palette">
-    <h3>Components</h3>
-    <div class="component" draggable="true" data-type="arduino">Arduino Uno</div>
+    <div class="component" draggable="true" data-type="arduino">Arduino</div>
     <div class="component" draggable="true" data-type="led">LED</div>
-    <div class="component" draggable="true" data-type="button">Push Button</div>
+    <div class="component" draggable="true" data-type="button">Button</div>
   </div>
 
-  <!-- Workspace -->
-  <div id="workspaceContainer">
-    <canvas id="canvas" width="900" height="500"></canvas>
-    <pre id="codePanel"></pre>
+  <div id="workarea">
+    <canvas id="canvas" width="800" height="400"></canvas>
+    <pre id="code"></pre>
   </div>
 
 </div>
 
-<!-- ===== Controls ===== -->
-<div id="controls">
-  <button id="startBtn">Start</button>
-  <button id="stopBtn">Stop</button>
+<div id="bottom">
+  <button id="start">Start</button>
+  <button id="stop">Stop</button>
 </div>
 
 <script src="script.js"></script>
