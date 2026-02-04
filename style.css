@@ -1,0 +1,75 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 50px 1fr 60px;
+}
+
+/* Toolbar */
+#toolbar {
+  background: #333;
+  padding: 10px;
+}
+
+#toolbar button {
+  margin-right: 10px;
+  padding: 6px 12px;
+}
+
+/* Main Area */
+#main {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+}
+
+/* Palette */
+#palette {
+  background: #2c3e50;
+  color: white;
+  padding: 10px;
+}
+
+.component {
+  background: #3498db;
+  padding: 8px;
+  margin: 5px 0;
+  cursor: grab;
+}
+
+/* Workspace */
+#workspaceContainer {
+  position: relative;
+  background: #ddd;
+}
+
+#canvas {
+  background: white;
+  border: 1px solid black;
+}
+
+/* Code View */
+#codePanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background: black;
+  color: #00ff00;
+  padding: 10px;
+  display: none;
+  overflow: auto;
+}
+
+/* Controls */
+#controls {
+  background: #333;
+  text-align: center;
+  padding: 10px;
+}
+
+#controls button {
+  padding: 10px 20px;
+  margin: 0 10px;
+}
