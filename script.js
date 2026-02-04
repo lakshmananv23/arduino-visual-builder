@@ -1,63 +1,80 @@
-body{
-  margin:0;
-  font-family:Arial;
+const board = document.getElementById("board");
+const codePanel = document.getElementById("codePanel");
+
+let parts = [];
+let ledState = false;
+
+/* Drag Start */
+document.querySelectorAll(".part").forEach(p=>{
+  p.ondragstart = e=>{
+    e.dataTransfer.setData("type",p.dataset.type);
+  };
+});
+
+/* Allow Drop */
+board.ondragover = e=>e.preventDefault();
+
+/* Drop */
+board.ondrop = e=>{
+  const type = e.dataTransfer.getData("type");
+
+  const img = document.createElement("img");
+  img.src = document.querySelector(`[data-type="${type}"]`).src;
+  img.className = "component";
+
+  img.style.left = e.offsetX+"px";
+  img.style.top = e.offsetY+"px";
+
+  board.appendChild(img);
+
+  parts.push(type);
+  generateCode();
+};
+
+/* Generate Code */
+function generateCode(){
+  let code =
+`int led = 13;
+int button = 2;
+
+void setup(){
+ pinMode(led,OUTPUT);
+ pinMode(button,INPUT);
 }
 
-#topbar{
-  background:#222;
-  padding:10px;
+void loop(){
+ if(digitalRead(button)){
+   digitalWrite(led,HIGH);
+ } else {
+   digitalWrite(led,LOW);
+ }
+}
+`;
+  codePanel.textContent = code;
 }
 
-#topbar button{
-  margin-right:10px;
-  padding:6px 12px;
+/* Toggle Code */
+document.getElementById("codeViewBtn").onclick=()=>{
+  codePanel.style.display =
+    codePanel.style.display=="block"?"none":"block";
 }
 
-#layout{
-  display:flex;
-  height:500px;
+/* Run */
+document.getElementById("runBtn").onclick=()=>{
+  ledState = !ledState;
+
+  document.querySelectorAll(".component")
+  .forEach(c=>{
+    if(c.src.includes("Qbf8fIk")){
+      c.style.filter =
+        ledState ? "drop-shadow(0 0 10px red)" : "none";
+    }
+  });
 }
 
-/* Palette */
-#palette{
-  width:180px;
-  background:#2c3e50;
-  color:white;
-  padding:10px;
-}
-
-.part{
-  width:120px;
-  margin-bottom:15px;
-  cursor:grab;
-}
-
-/* Workspace */
-#workspace{
-  flex:1;
-  position:relative;
-  background:#ddd;
-}
-
-#board{
-  width:100%;
-  height:100%;
-  position:relative;
-}
-
-.component{
-  position:absolute;
-  width:120px;
-}
-
-#codePanel{
-  display:none;
-  position:absolute;
-  right:0;
-  top:0;
-  width:40%;
-  height:100%;
-  background:black;
-  color:#00ff00;
-  padding:10px;
+/* Stop */
+document.getElementById("stopBtn").onclick=()=>{
+  ledState=false;
+  document.querySelectorAll(".component")
+  .forEach(c=>c.style.filter="none");
 }
